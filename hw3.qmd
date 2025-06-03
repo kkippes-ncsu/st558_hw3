@@ -1,0 +1,25 @@
+---
+title: "HW3 - Intro to Tidyverse"
+author: Kayla Kippes
+format: pdf
+editor: visual
+---
+
+## Task 1
+
+### Part A
+
+We cannot use the read_csv() to read in these data because the delimiter is a semicolon and not a comma.
+
+```{r}
+data <- read_csv2("data/data.txt")
+data
+```
+
+### Part B
+
+```{r}
+data2 <- read_delim("data/data2.txt", delim = "6", col_types = "fdc")
+data2
+```
+
