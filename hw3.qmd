@@ -3,6 +3,8 @@ title: "HW3 - Intro to Tidyverse"
 author: Kayla Kippes
 format: pdf
 editor: visual
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Task 1
@@ -23,3 +25,38 @@ data2 <- read_delim("data/data2.txt", delim = "6", col_types = "fdc")
 data2
 ```
 
+## Task 2
+
+### Part A
+
+```{r}
+trailblazer <- read_csv("data/trailblazer.csv")
+trailblazer
+```
+
+### Part B
+
+```{r}
+library(tidyr)
+#Put the data into long format and tidy up columns
+trailblazer_longer <- trailblazer |>
+  pivot_longer(cols = 2:11, 
+               names_to = c("Game", "Location"),
+               names_sep = "_",
+               values_to = "Points")
+trailblazer_longer[1:5,]
+```
+
+### Part C
+
+```{r}
+trailblazer_longer |>
+  pivot_wider(names_from = Location, values_from = Points) |>
+  group_by(Player) |>
+  summarize(Mean_Home = mean(Home, na.rm = TRUE),
+            Mean_Away = mean(Away, na.rm = TRUE),
+            Difference = Mean_Home - Mean_Away) |>
+  arrange(desc(Difference))
+```
+
+Jusuf Nurkic, Robert Covington, Nassir Little, Damian Lillard, and Cody Zeller all scored more points at home than away in the first 10 games.
