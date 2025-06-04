@@ -7,6 +7,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
 ## Task 1
 
 ### Part A
@@ -14,6 +18,9 @@ editor_options:
 We cannot use the read_csv() to read in these data because the delimiter is a semicolon and not a comma.
 
 ```{r}
+library(tidyverse)
+library(palmerpenguins)
+
 data <- read_csv2("data/data.txt")
 data
 ```
@@ -51,12 +58,46 @@ trailblazer_longer[1:5,]
 
 ```{r}
 trailblazer_longer |>
-  pivot_wider(names_from = Location, values_from = Points) |>
+  pivot_wider(names_from = Location, values_from = Points, values_fill = 0) |>
   group_by(Player) |>
-  summarize(Mean_Home = mean(Home, na.rm = TRUE),
+  summarise(Mean_Home = mean(Home, na.rm = TRUE),
             Mean_Away = mean(Away, na.rm = TRUE),
             Difference = Mean_Home - Mean_Away) |>
   arrange(desc(Difference))
 ```
 
 Jusuf Nurkic, Robert Covington, Nassir Little, Damian Lillard, and Cody Zeller all scored more points at home than away in the first 10 games.
+
+## Task 3
+
+### Part A
+
+<NULL> means that there are no values for that species and island combination.
+
+<dbl [52]> means that the list contains 52 values in it.
+
+<list> means that the output contains a list-column.
+
+### Part B
+
+```{r}
+penguins |>
+   select(species, island, bill_length_mm) |>
+  group_by(species, island) |>
+  summarise(count = n()) |>
+  pivot_wider(names_from = island, values_from = count, values_fill = 0) 
+```
+
+## Task 4
+
+```{r}
+penguins |>
+  select(species, bill_length_mm) |>
+  mutate(bill_length_mm = case_when(
+    is.na(bill_length_mm) & species == "Adelie" ~ 26,
+    is.na(bill_length_mm) & species == "Gentoo" ~ 30,
+    TRUE ~ bill_length_mm)) |>
+  arrange(bill_length_mm) |>
+  print(n = 10)
+```
+
